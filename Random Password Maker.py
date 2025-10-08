@@ -4,7 +4,11 @@ import random
 import string
 import tkinter
 
+#webList = []
+passwordList = []
+password = ''
 def random_maker():
+    global password
     length = int(entry.get())
     char = string.ascii_lowercase # lowercase letters are always included in passwords
     if display():
@@ -36,25 +40,96 @@ window.columnconfigure(2,weight=0)
 window.columnconfigure(3,weight=1)
 window.columnconfigure(4,weight=0)
 
+
+# Make a Frame to hold both buttons in Place
+button_frame = tkinter.Frame(window)
+button_frame.grid(row=6, column=3, pady=5)
+"""
+entry_frame = tkinter.Frame(window)
+entry_frame.grid(row=5,column=3,pady=5)
+
+label_frame= tkinter.Frame(window)
+label_frame.grid
+"""
+
+
 # Make a Button
-new_Password = tkinter.Button(window,text="New Password",command= random_maker)
+new_Password = tkinter.Button(button_frame,text="New Password",command= random_maker)
 new_Password.config(width=12,height=1)
 new_Password.config(font=("Arial",9))
-new_Password.grid(row=4,column=3)
-#new_Password.pack()
+new_Password.pack(side="left",padx=5)
+new_Password.pack()
+
+# Make a Copy Button 
+def copy_pwd():
+    #webList.append(user_input)
+    passwordList.append(password) # Plan to append newly created passwords to passwordlist for user to see passwords
+    #print(passwordList)
+    #print(webList)
+    window.clipboard_clear()
+    window.clipboard_append(password)
+    window.update()
+
+copy_button = tkinter.Button(button_frame, text="Copy Password", command= copy_pwd)
+copy_button.config(width=14,height=1)
+copy_button.config(font=("Arial",9))
+copy_button.pack(side="left",padx=5)
+
+
+#Make a File Append Button
+def append_Pwd():
+    with open("Saved_Passwords.txt","a") as fname:
+        try:
+            fname.write(f"{password}\n")
+            print("Password Added to File!")
+
+        except FileNotFoundError:
+            print("No File Found, creating New File...")
+            fname = open("Saved_Passwords.txt","a")
+            fname.write(password)
+            fname.close()
+            print("Password Added to File!")
+
+file_button= tkinter.Button(button_frame, text="Add To File", command= append_Pwd)
+file_button.config(width=14,height=1)
+file_button.config(font=("Arial",9))
+file_button.pack(side="left",padx=5)
 
 # Making a Label
 pwd_display = tkinter.Label(window,text="New Password: ")
 pwd_display.config(font=("Arial",11))
-pwd_display.grid(row=5,column=3)
+pwd_display.grid(row=8,column=3,pady=3)
 #pwd_display.pack()
 
+"""
+# Making a Website Label
+web_display = tkinter.Label(window) 
+"""
+
+
 # Making an Entry
-entry = tkinter.Entry()
+entry = tkinter.Entry(window)
 entry.insert(0,"12")
 entry.config(font=("Arial",11))
-entry.grid(row=6,column=3)
+#entry.pack()
+entry.grid(row=5,column=3)
 #entry.pack(pady=2)
+
+"""
+# Website Entry
+def when_enter_pressed(event):
+    global user_input
+    user_input = webEntry.get()
+
+webEntry = tkinter.Entry(entry_frame)
+webEntry.insert(0,"Website Name")
+webEntry.config(font=("Arial",11))
+webEntry.bind("<Return>",when_enter_pressed)
+#webEntry.pack()
+webEntry.grid(row=5,column=2)
+"""
+
+
 
 # Making 3 Check Boxes 
 
